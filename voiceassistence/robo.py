@@ -2,7 +2,6 @@ import speech_recognition as sr
 import pyttsx3
 import datetime
 
-# Initialize recognizer and TTS engine
 recognizer = sr.Recognizer()
 tts = pyttsx3.init()
 
@@ -11,7 +10,6 @@ def speak(text):
     tts.say(text)
     tts.runAndWait()
 
-# Function to listen for commands
 def listen():
     with sr.Microphone() as source:
         print("Listening...")
