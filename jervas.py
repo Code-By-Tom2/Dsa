@@ -19,7 +19,7 @@ should_exit = False
 reminders = []
 reminders_lock = threading.Lock()
 
-API_KEY = 'YOUR_API_KEY_HERE'  # Replace with a valid key from https://openweathermap.org/
+API_KEY = 'bc684fae3120dc80d09629437ae5de55'
 
 def speak(text):
     """Convert text to speech and play it."""
@@ -45,12 +45,11 @@ def set_female_voice():
 def play_wakeup_sound():
     """Play a simple wake-up sound (beep) if available."""
     try:
-        # Simple beep using system sound (Windows-specific, adjust for other OS)
         if os.name == 'nt':
             import winsound
-            winsound.Beep(1000, 200)  # 1000 Hz, 200 ms
+            winsound.Beep(1000, 200)
     except Exception:
-        pass  # Silently skip if sound fails
+        pass 
 
 def greet():
     """Greet the user upon starting the assistant."""
@@ -60,19 +59,19 @@ def greet():
 def tell_time():
     """Tell the current time."""
     now = datetime.datetime.now()
-    time_str = now.strftime("%I:%M %p")  # 12-hour format with AM/PM
+    time_str = now.strftime("%I:%M %p")
     speak(f"The current time is {time_str}")
 
 def tell_date():
     """Tell the current date."""
     now = datetime.datetime.now()
-    date_str = now.strftime("%B %d, %Y")  # e.g., "March 26, 2025"
+    date_str = now.strftime("%B %d, %Y")
     speak(f"Today is {date_str}")
 
 def calculate(expression):
     """Perform a mathematical calculation safely using numexpr."""
     try:
-        result = ne.evaluate(expression).item()  # Safer than eval()
+        result = ne.evaluate(expression).item()
         speak(f"The result is {result}")
     except Exception as e:
         print(f"Calculation error: {e}")
@@ -115,7 +114,7 @@ def process_command(recognizer, audio):
         command = recognizer.recognize_google(audio).lower()
         print(f"You said: {command}")
         if "jervas" in command:
-            play_wakeup_sound()  # Feedback for wake word detection
+            play_wakeup_sound()
             command = command.replace("jervas", "").strip()
             print(f"Processing command: {command}")
             if "time" in command:
@@ -125,7 +124,6 @@ def process_command(recognizer, audio):
             elif "calculate" in command:
                 try:
                     expression = command.split("calculate", 1)[1].strip()
-                    # Replace spoken operators with symbols
                     expression = expression.replace("plus", "+").replace("minus", "-").replace("times", "*").replace("divided by", "/")
                     calculate(expression)
                 except IndexError:
@@ -173,26 +171,21 @@ def main():
     recognizer = sr.Recognizer()
     microphone = sr.Microphone()
 
-    # Adjust for ambient noise
     with microphone as source:
         print("Adjusting for ambient noise...")
         recognizer.adjust_for_ambient_noise(source, duration=2)
         print("Adjustment complete. Listening in the background.")
 
-    # Start background listening
     stop_listening = recognizer.listen_in_background(microphone, process_command)
 
-    # Main loop for reminders
     while not should_exit:
         check_reminders()
         time.sleep(1)
 
-    # Clean up
     stop_listening(wait_for_stop=False)
     print("JERVAS has stopped.")
 
 if __name__ == "__main__":
-    # Ensure dependencies are installed
     required_modules = ['speech_recognition', 'pyttsx3', 'requests', 'numexpr']
     for module in required_modules:
         try:
@@ -201,8 +194,7 @@ if __name__ == "__main__":
             print(f"Missing module: {module}. Install it with 'pip install {module}'")
             exit(1)
 
-    # Check API key
-    if API_KEY == 'YOUR_API_KEY_HERE':
-        print("Warning: Replace 'YOUR_API_KEY_HERE' with a valid OpenWeatherMap API key for weather functionality.")
+    if API_KEY == 'bc684fae3120dc80d09629437ae5de55':
+        print("Warning: Replace 'bc684fae3120dc80d09629437ae5de55' with a valid OpenWeatherMap API key for weather functionality.")
     
     main()
