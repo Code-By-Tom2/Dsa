@@ -4,25 +4,21 @@ import datetime
 import requests
 import time
 import threading
-import numexpr as ne  # Safer alternative to eval() for calculations
+import numexpr as ne
 import os
 
-# Initialize the text-to-speech engine
 try:
     engine = pyttsx3.init()
-    engine.setProperty('rate', 150)  # Adjust speech speed (default 200, lower is slower)
+    engine.setProperty('rate', 150)
 except Exception as e:
     print(f"Error initializing pyttsx3: {e}")
     exit(1)
 
-# Global flag to control the main loop exit
 should_exit = False
 
-# List to store reminders and a lock for thread safety
 reminders = []
 reminders_lock = threading.Lock()
 
-# OpenWeatherMap API key (replace with your own)
 API_KEY = 'YOUR_API_KEY_HERE'  # Replace with a valid key from https://openweathermap.org/
 
 def speak(text):
